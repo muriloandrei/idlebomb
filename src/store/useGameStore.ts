@@ -8,6 +8,7 @@ export interface HeroData {
   speed: number;
   power: number;
   maxStamina: number;
+  baseCooldown: number;
 }
 
 export interface LogEntry {
@@ -26,7 +27,7 @@ export interface GameState {
   // Upgrades Globais
   upgradeMaxStaminaLevel: number;
   upgradeSpeedLevel: number;
-  upgradeCooldownLevel: number;
+  upgradeBombRadiusLevel: number;
 
   // Novos status UI e engine
   totalKills: number;
@@ -41,7 +42,7 @@ export interface GameState {
   buyHero: (cost: number) => boolean;
   buyUpgradeStamina: (cost: number) => boolean;
   buyUpgradeSpeed: (cost: number) => boolean;
-  buyUpgradeCooldown: (cost: number) => boolean;
+  buyUpgradeBombRadius: (cost: number) => boolean;
   setLastLoginDate: (timestamp: number) => void;
   resetSave: () => void;
 
@@ -62,13 +63,14 @@ const initialState = {
       rarity: 'Common' as const,
       speed: 3,
       power: 1,
-      maxStamina: 15
+      maxStamina: 15,
+      baseCooldown: 3500
     }
   ],
   currentLevel: 1,
   upgradeMaxStaminaLevel: 1,
   upgradeSpeedLevel: 1,
-  upgradeCooldownLevel: 1,
+  upgradeBombRadiusLevel: 1,
   lastLoginDate: null,
 
   totalKills: 0,
@@ -106,7 +108,8 @@ export const useGameStore = create<GameState>()(
             rarity,
             speed: rarity === 'Legendary' ? 1.5 : (rarity === 'Epic' ? 2 : 3), // Menor = mais rápido
             power: rarity === 'Legendary' ? 4 : (rarity === 'Epic' ? 3 : (rarity === 'Rare' ? 2 : 1)),
-            maxStamina: 15 + (state.upgradeMaxStaminaLevel * 2) 
+            maxStamina: 15 + (state.upgradeMaxStaminaLevel * 2),
+            baseCooldown: rarity === 'Legendary' ? 1500 : (rarity === 'Epic' ? 2000 : (rarity === 'Rare' ? 2500 : 3500))
           };
           
           set({
@@ -145,14 +148,14 @@ export const useGameStore = create<GameState>()(
         return false;
       },
 
-      buyUpgradeCooldown: (cost: number) => {
+      buyUpgradeBombRadius: (cost: number) => {
         const state = get();
         if (state.gold >= cost) {
           set({
             gold: state.gold - cost,
-            upgradeCooldownLevel: state.upgradeCooldownLevel + 1
+            upgradeBombRadiusLevel: state.upgradeBombRadiusLevel + 1
           });
-          get().addLog('coin', `Melhoria Bombas Ágeis \u2192 Nível ${state.upgradeCooldownLevel + 1}`);
+          get().addLog('coin', `Melhoria Raio de Explosão \u2192 Nível ${state.upgradeBombRadiusLevel + 1}`);
           return true;
         }
         return false;

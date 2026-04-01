@@ -5,8 +5,8 @@ import { useGameStore } from './store/useGameStore';
 function App() {
   const { 
     gold, heroes, currentLevel, 
-    upgradeMaxStaminaLevel, upgradeSpeedLevel, upgradeCooldownLevel, 
-    buyHero, buyUpgradeStamina, buyUpgradeSpeed, buyUpgradeCooldown,
+    upgradeMaxStaminaLevel, upgradeSpeedLevel, upgradeBombRadiusLevel, 
+    buyHero, buyUpgradeStamina, buyUpgradeSpeed, buyUpgradeBombRadius,
     totalKills, boxesDestroyed, gameSpeed, isPaused, logs,
     setGameSpeed, togglePause, nextLevel
   } = useGameStore();
@@ -14,7 +14,7 @@ function App() {
   const heroCost = 100 * Math.pow(1.5, heroes.length - 1);
   const staminaCost = 75 * Math.pow(1.5, (upgradeMaxStaminaLevel || 1) - 1);
   const speedCost = 50 * Math.pow(1.8, (upgradeSpeedLevel || 1) - 1);
-  const cooldownCost = 150 * Math.pow(1.6, (upgradeCooldownLevel || 1) - 1);
+  const radiusCost = 150 * Math.pow(1.6, (upgradeBombRadiusLevel || 1) - 1);
 
   // Mapeamento de emojis e cores baseados na raridade
   const heroStyleMap = {
@@ -140,13 +140,13 @@ function App() {
                {/* 2. Cooldown (Substituindo 'Qtd Bombas') */}
                <button 
                   className="upgrade-btn" 
-                  disabled={gold < cooldownCost}
-                  onClick={() => buyUpgradeCooldown(cooldownCost)}
+                  disabled={gold < radiusCost}
+                  onClick={() => buyUpgradeBombRadius(radiusCost)}
                 >
-                  <span className="upgrade-icon">🧨</span>
-                  <span className="upgrade-name">Bombas Ágeis</span>
-                  <span className="upgrade-cost">{Math.floor(cooldownCost)} BCOIN</span>
-                  <span className="upgrade-level">Nível {upgradeCooldownLevel}</span>
+                  <span className="upgrade-icon">💣</span>
+                  <span className="upgrade-name">Raio Extra</span>
+                  <span className="upgrade-cost">{Math.floor(radiusCost)} BCOIN</span>
+                  <span className="upgrade-level">Nível {upgradeBombRadiusLevel}</span>
                </button>
 
                {/* 3. Speed */}

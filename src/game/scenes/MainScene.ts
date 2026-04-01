@@ -167,13 +167,13 @@ export class MainScene extends Phaser.Scene {
             startY: 1
           });
           const speedLvl = state.upgradeSpeedLevel || 1;
-          const cdLvl = state.upgradeCooldownLevel || 1;
+          const radiusLvl = state.upgradeBombRadiusLevel || 1;
 
           newHero.speed = hData.speed + (speedLvl * 0.2); // Fica mais rapido
-          newHero.power = hData.power;
+          newHero.power = hData.power + (radiusLvl - 1); // Melhoria Raio da Loja
           newHero.maxStamina = hData.maxStamina;
           newHero.stamina = hData.maxStamina;
-          newHero.bombCooldown = Math.max(500, 3500 - (cdLvl * 200));
+          newHero.bombCooldown = hData.baseCooldown; // Cooldown individualizado
           
           // Para evitar o efeito de que não apareceu por estar na mesma exata posição pixel por pixel:
           // Se não for o primeiro, aplicamos um mini offset visual até ele andar
